@@ -21,6 +21,11 @@ public class UserData {
 	}
 	public void setSurname(String surname) {
 		this.surname = surname;
-	} 
+	}
+
+	@Override
+	public String toString() {
+		return "User account fullname " + this.name + " "  + this.surname;
+	}
 		
 }
