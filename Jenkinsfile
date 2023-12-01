@@ -1,8 +1,13 @@
 pipeline {
     agent none
-  options { skipDefaultCheckout() }
     stages {
-	       stage('clean') {
+		  stage('checkout') {
+            agent any
+            steps {
+                sh 'git checkout main'
+            }
+        }
+	     stage('clean') {
             agent any
             steps {
                 sh 'mvn clean'
