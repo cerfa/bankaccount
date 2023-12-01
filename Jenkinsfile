@@ -28,13 +28,13 @@ pipeline {
         stage('package') {
             agent any
             steps {
-                sh 'mvn package --skipTest=true'
+                sh 'mvn package --skipTests=true=true'
                }
             }
         stage('install') {
             agent any
             steps {
-                sh 'mvn install --skipTest=true'
+                sh 'mvn install --skipTests=true=true'
 	       }
            			
             post {
