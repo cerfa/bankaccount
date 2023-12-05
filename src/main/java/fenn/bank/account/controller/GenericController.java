@@ -12,13 +12,12 @@ public abstract class GenericController extends CorsUtils {
 
 	protected void crossOriginComplianceSetting(HttpServletRequest request, HttpServletResponse response) {
 		if(CorsUtils.isCorsRequest(request)) {
-			LOG.info("origin specified request {} ",request);
-			LOG.info("origin specified caller {} ",request.getHeader("Origin"));
+			LOG.info("origin specified request full {} ",request);
+			LOG.info("origin specified caller entry {} ",request.getHeader("Origin"));
 		}else {
-			LOG.info("origin specified request {} ",request);
-			LOG.info("origin specified caller {} ",request.getHeader("Origin"));
-			LOG.info("origin specified caller {} ",request.getMethod());
-			LOG.info("origin specified caller {} ",request.getMethod());
+			LOG.info("origin specified request  noCors {} ",request);
+			LOG.info("origin specified caller header {} ",request.getHeader("Origin"));
+			LOG.info("origin specified caller  method {} ",request.getMethod());
 		}
 	}
 
