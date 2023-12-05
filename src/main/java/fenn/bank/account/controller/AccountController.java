@@ -34,7 +34,7 @@ public class AccountController extends GenericController{
 	
 	@Autowired
 	private AccountService accountService;
-	
+
 	@PostMapping(value="/addAccount",produces = "application/json")
 	public ResponseEntity<AccountCreationResponse>retrieveAccountData(@RequestBody(required=true) @NotNull AccountInfo accountInfo) throws Exception{
 		LOG.info("****** retrieveAccountData in ******");
@@ -42,7 +42,7 @@ public class AccountController extends GenericController{
 				.ok()
 				.body(accountService.retrieveCreateAccount(accountInfo));
 	}
-		
+
 	@PostMapping(value="/createUser")
 	public ResponseEntity<AccountCreationResponse> createUser(@RequestBody(required=true) @NotNull UserData userData) throws AccountException{
 		LOG.info("****** create customer in ******");
@@ -50,19 +50,19 @@ public class AccountController extends GenericController{
 				.ok()
 				.body(customerService.retrieveCreateCustomer(userData));
 	}
-	
+
 	@GetMapping(value="/checkUser/{userId}")
 	public ResponseEntity<String> checkExitence(@PathVariable("userId") @NotNull String userId) throws AccountException{
-		LOG.info("****** create customer in ******");
+		LOG.info(" Check user already registered");
 		return ResponseEntity
 				.ok()
 				.body(customerService.checkCustomerExistency(userId));
 	}
-	
-	
+
+
 	@GetMapping(value="/userAccount/details/{userId}")
 	public ResponseEntity<UserAccTransactionDetailsResponse> retrieveAccountsDetails(@PathVariable("userId") @NotNull String userId) throws AccountException,URISyntaxException{
-		LOG.info("****** create customer in ******");
+		LOG.info("****** create customer details ******");
 		return ResponseEntity
 				.ok()
 				.body(customerService.retrieveUserAccountDetails(userId));
