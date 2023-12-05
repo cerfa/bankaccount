@@ -11,7 +11,7 @@ pipeline {
             agent any
             steps {
                 sh 'mvn clean'
-                sh 'mvn verify sonar:sonar   -Dsonar.projectKey=bankaccount   -Dsonar.host.url=http://localhost:9000   -Dsonar.login=sqp_b402930b4b7e4d744110c162ae823ee5baf105fe'
+                sh 'mvn verify sonar:sonar -Dsonar.projectKey=bankaccount -Dsonar.host.url=http://localhost:9000 -Dsonar.login=sqp_b402930b4b7e4d744110c162ae823ee5baf105fe'
             }
         }
         stage('validate') {
