@@ -6,6 +6,7 @@ public class TransactionsHistoryResponse {
  private List<Transaction> transactionList;
 
 public TransactionsHistoryResponse() {
+	//Just for the sake of making sonar happy.
 }
 
 public List<Transaction> getTransactionList() {

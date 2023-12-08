@@ -34,8 +34,7 @@ public class AccountService {
 		AccountCreationResponse accountCreationResponse = new AccountCreationResponse();
 
 		if(0 != accountInfo.getInitialCredit().compareTo(new BigDecimal("0"))
-				&& customerService.checkCustomerExistency(accountInfo.getCustomerID()).equals("OK")
-				&& !alreadyCreatedAccount(accountInfo.getCustomerID())) {
+				&& customerService.checkCustomerExistence(accountInfo.getCustomerID()).equals("OK")) {
 			LOG.info("****** createAccount out ******");
 			Account customerAccount = new Account();
 			customerAccount.setCredit(accountInfo.getInitialCredit());
@@ -46,8 +45,8 @@ public class AccountService {
 			return accountCreationResponse;
 		}
 		else {
-			LOG.info("****** createAccount out ******");
-			accountCreationResponse.setResponseMessage("");
+			LOG.info("****** createAccount out ot credit ******");
+			accountCreationResponse.setResponseMessage("NOT YET CUSTOMER. YOU SHOULD  CREATE CUSTOMER PROFILE");
 			return accountCreationResponse;
 		}
 	} 

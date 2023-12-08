@@ -8,6 +8,7 @@ public class AccountInfo {
 	private  BigDecimal initialCredit;
 
 	public AccountInfo() {
+		//Just for the sake of making sonar happy.
 	}
 	public AccountInfo(String accountId, BigDecimal initialCredit) {
 		this.customerID = accountId;

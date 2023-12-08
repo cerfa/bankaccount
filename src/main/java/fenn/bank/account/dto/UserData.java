@@ -5,6 +5,7 @@ public class UserData {
 	private String surname;	
 	
 	public UserData() {
+		//Just for the sake of making sonar happy.
 	}
 	public UserData(String name, String surname) {
 		this.name = name;

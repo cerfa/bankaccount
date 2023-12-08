@@ -10,6 +10,7 @@ public class Transaction {
 
 
 	public Transaction() {
+		//Just for the sake of making sonar happy.
 	}
 	public Transaction(Integer transactionId, BigDecimal amount, Timestamp timeStamp) {
 		this.transactionId = transactionId;

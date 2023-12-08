@@ -10,6 +10,7 @@ public class AccountDeepInfo {
 	private List<Transaction> transactionCollection;
 		
 	public AccountDeepInfo() {
+		//Just for the sake of making sonar happy.
 	}
 	public AccountDeepInfo(String name, String surname, BigDecimal balance, List<Transaction> transactionCollection) {
 		this.name = name;

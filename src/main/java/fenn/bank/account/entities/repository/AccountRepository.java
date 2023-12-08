@@ -1,11 +1,8 @@
 package fenn.bank.account.entities.repository;
 
-import java.util.List;
-
+import fenn.bank.account.entities.Account;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-
-import fenn.bank.account.entities.Account;
 
 
  

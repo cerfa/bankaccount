@@ -26,6 +26,7 @@ public class Account {
 
 
 	public Account() {
+		//Just the sake of making sonar happy.
 	}
 	public Account(String customerId, BigDecimal credit, Timestamp timeStamp) {
 		this.customerId = customerId;

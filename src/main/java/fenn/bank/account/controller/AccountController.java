@@ -1,7 +1,12 @@
 package fenn.bank.account.controller;
 
-import java.net.URISyntaxException;
-
+import fenn.bank.account.dto.AccountCreationResponse;
+import fenn.bank.account.dto.AccountInfo;
+import fenn.bank.account.dto.UserAccTransactionDetailsResponse;
+import fenn.bank.account.dto.UserData;
+import fenn.bank.account.entities.repository.services.AccountService;
+import fenn.bank.account.entities.repository.services.CustomerService;
+import fenn.bank.account.exceptions.AccountException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.sun.istack.NotNull;
-
-import fenn.bank.account.dto.AccountCreationResponse;
-import fenn.bank.account.dto.AccountInfo;
-import fenn.bank.account.dto.UserAccTransactionDetailsResponse;
-import fenn.bank.account.dto.UserData;
-import fenn.bank.account.entities.repository.services.AccountService;
-import fenn.bank.account.entities.repository.services.CustomerService;
-import fenn.bank.account.exceptions.AccountException;
 
 
 @RestController
@@ -36,7 +31,7 @@ public class AccountController extends GenericController{
 	private AccountService accountService;
 
 	@PostMapping(value="/addAccount",produces = "application/json")
-	public ResponseEntity<AccountCreationResponse>retrieveAccountData(@RequestBody(required=true) @NotNull AccountInfo accountInfo) throws Exception{
+	public ResponseEntity<AccountCreationResponse>retrieveAccountData(@RequestBody AccountInfo accountInfo) throws AccountException {
 		LOG.info("****** retrieveAccountData in ******");
 		return ResponseEntity
 				.ok()
@@ -44,7 +39,7 @@ public class AccountController extends GenericController{
 	}
 
 	@PostMapping(value="/createUser")
-	public ResponseEntity<AccountCreationResponse> createUser(@RequestBody(required=true) @NotNull UserData userData) throws AccountException{
+	public ResponseEntity<AccountCreationResponse> createUser(@RequestBody UserData userData) throws AccountException{
 		LOG.info("****** create customer in ******");
 		return ResponseEntity
 				.ok()
@@ -52,16 +47,16 @@ public class AccountController extends GenericController{
 	}
 
 	@GetMapping(value="/checkUser/{userId}")
-	public ResponseEntity<String> checkExitence(@PathVariable("userId") @NotNull String userId) throws AccountException{
+	public ResponseEntity<String> checkExitence(@PathVariable("userId") String userId) throws AccountException{
 		LOG.info(" Check user already registered");
 		return ResponseEntity
 				.ok()
-				.body(customerService.checkCustomerExistency(userId));
+				.body(customerService.checkCustomerExistence(userId));
 	}
 
 
 	@GetMapping(value="/userAccount/details/{userId}")
-	public ResponseEntity<UserAccTransactionDetailsResponse> retrieveAccountsDetails(@PathVariable("userId") @NotNull String userId) throws AccountException,URISyntaxException{
+	public ResponseEntity<UserAccTransactionDetailsResponse> retrieveAccountsDetails(@PathVariable("userId") String userId) throws AccountException {
 		LOG.info("****** create customer details ******");
 		return ResponseEntity
 				.ok()
