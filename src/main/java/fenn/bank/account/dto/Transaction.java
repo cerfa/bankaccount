@@ -5,17 +5,12 @@ import java.sql.Timestamp;
 
 public class Transaction {
 	private Integer transactionId;
+	private String accountId;
 	private BigDecimal amount;
 	private Timestamp timeStamp;
 
-
 	public Transaction() {
 		//Just for the sake of making sonar happy.
-	}
-	public Transaction(Integer transactionId, BigDecimal amount, Timestamp timeStamp) {
-		this.transactionId = transactionId;
-		this.amount = amount;
-		this.timeStamp = timeStamp;
 	}
 	public Integer getTransactionId() {
 		return transactionId;
@@ -36,4 +31,10 @@ public class Transaction {
 		this.timeStamp = timeStamp;
 	}
 
+	public String getAccountId() {
+		return accountId;
+	}
+	public void setAccountId(String accountId) {
+		this.accountId = accountId;
+	}
 }

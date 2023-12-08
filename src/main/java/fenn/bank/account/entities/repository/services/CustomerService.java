@@ -21,7 +21,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class CustomerService {
@@ -60,7 +59,7 @@ public class CustomerService {
 				accountCreationResponse.setResponseMessage("Accounting already existing");
 				return accountCreationResponse;
 			} else {
-				Customer customerAccount = new Customer(generateAccountId(),
+				Customer customerAccount = new Customer(CommonInfo.generateAccountId(),
 						userData.getName(),
 						userData.getSurname());
 				save(customerAccount);
@@ -77,7 +76,7 @@ public class CustomerService {
     public UserAccTransactionDetailsResponse  retrieveUserAccountDetails(String userId) throws AccountException {
 		UserAccTransactionDetailsResponse accDetailsResponse= new UserAccTransactionDetailsResponse();
 		try {
-		    Optional<Customer> customerAccount = customerRepository.findById(userId);
+		    Optional<Customer> customerAccount = customerRepository.findByCustomerId(userId);
 		    if(customerAccount.isPresent()) {
 			AccountDeepInfo userAccountDetails = new  AccountDeepInfo();
 			userAccountDetails.setName(customerAccount.get().getName());
@@ -98,8 +97,12 @@ public class CustomerService {
 					userAccountDetails.getTransactionCollection().add(accTransaction);
 				} 
 			}
-			Account account= accountService.retrieveAccount(userId);
-			userAccountDetails.setBalance(account.getCredit().subtract(balance));
+			List<Account> accounts = accountService.retrieveAccounts(userId);
+
+			if(!CollectionUtils.isEmpty(accounts)) {
+				userAccountDetails.setAccountCollection(accounts);
+			 }
+
 			accDetailsResponse.setUserAccountDetails(userAccountDetails);
 		   }
 
@@ -112,11 +115,6 @@ public class CustomerService {
     public String checkCustomerExistence(String customerId) {
     	Optional<Customer> customerAccount = customerRepository.findById(customerId);
     	return customerAccount.isPresent()? "OK":"KO";
-    }
-    private String generateAccountId() {
-        UUID uuid = UUID.randomUUID();
-        String uuidAsString = uuid.toString().replace("-", "");
-     return  "ACC".concat(uuidAsString);
     }
     
 }

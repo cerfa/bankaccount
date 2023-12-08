@@ -19,7 +19,8 @@ public class Account {
 	@Id
 	@GeneratedValue
 	@Column
-	private Integer id;
+	private int id;
+	private String accountId;
 	private String customerId;
 	private BigDecimal credit;
 	private Timestamp timeStamp;
@@ -28,16 +29,12 @@ public class Account {
 	public Account() {
 		//Just the sake of making sonar happy.
 	}
-	public Account(String customerId, BigDecimal credit, Timestamp timeStamp) {
-		this.customerId = customerId;
-		this.credit = credit;
-		this.timeStamp = timeStamp;
-	}
 
-	public Integer getId() {
+
+	public int getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getCustomerId() {
@@ -57,5 +54,13 @@ public class Account {
 	}
 	public void setTimeStamp(Timestamp timeStamp) {
 		this.timeStamp = timeStamp;
+	}
+
+	public String getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(String accountId) {
+		this.accountId = accountId;
 	}
 }
