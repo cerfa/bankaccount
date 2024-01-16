@@ -17,7 +17,9 @@ public class Customer {
     private String surname;
  
     // Default constructor.
-    public Customer() {  }
+    public Customer() {
+		//Just for the sake of making sonar happy.
+	}
 
 	public String getCustomerId() {
 		return customerId;

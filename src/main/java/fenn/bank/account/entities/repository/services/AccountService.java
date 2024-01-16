@@ -2,6 +2,7 @@ package fenn.bank.account.entities.repository.services;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,14 +31,28 @@ public class AccountService {
 		accountRepository.save(customerAccount);
 	}
 
+	public Account retrieveAccountById(String accountId) {
+		return accountRepository.findByAccountId(accountId);
+	}
+	public String retrieveAccountCheckBalance(String accountId, BigDecimal amount) {
+		Account account = accountRepository.findByAccountId(accountId);
+		if(null != account && account.getCredit().compareTo(amount) >= 0) {
+			account.setCredit(account.getCredit().subtract(amount));
+			accountRepository.save(account);
+			return "OK";
+		} else {
+			return "KO";
+		}
+	}
+
 	public AccountCreationResponse retrieveCreateAccount(final AccountInfo accountInfo) throws AccountException{
 		AccountCreationResponse accountCreationResponse = new AccountCreationResponse();
 
 		if(0 != accountInfo.getInitialCredit().compareTo(new BigDecimal("0"))
-				&& customerService.checkCustomerExistency(accountInfo.getCustomerID()).equals("OK")
-				&& !alreadyCreatedAccount(accountInfo.getCustomerID())) {
+				&& customerService.checkCustomerExistence(accountInfo.getCustomerID()).equals("OK")) {
 			LOG.info("****** createAccount out ******");
 			Account customerAccount = new Account();
+			customerAccount.setAccountId(CommonInfo.generateAccountId());
 			customerAccount.setCredit(accountInfo.getInitialCredit());
 			customerAccount.setCustomerId(accountInfo.getCustomerID());
 			customerAccount.setTimeStamp(new Timestamp(System.currentTimeMillis()));
@@ -46,18 +61,12 @@ public class AccountService {
 			return accountCreationResponse;
 		}
 		else {
-			LOG.info("****** createAccount out ******");
-			accountCreationResponse.setResponseMessage("");
+			LOG.info("****** createAccount out ot credit ******");
+			accountCreationResponse.setResponseMessage("NOT YET CUSTOMER. YOU SHOULD  CREATE CUSTOMER PROFILE");
 			return accountCreationResponse;
 		}
-	} 
-	
-	private boolean alreadyCreatedAccount(String userId) {
-		Account userAcc= accountRepository.findByCustomerId(userId);
-		return userAcc != null;
 	}
-	
-	public Account retrieveAccount(String userId) {
+	public List<Account> retrieveAccounts(String userId) {
 		return accountRepository.findByCustomerId(userId);
 	}
 }

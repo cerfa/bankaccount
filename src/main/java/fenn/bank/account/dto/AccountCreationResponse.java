@@ -4,6 +4,7 @@ public class AccountCreationResponse {
  private String responseMessage;
 
 public AccountCreationResponse() {
+	//Just for the sake of making sonar happy.
 }
 
 public AccountCreationResponse(String responseMessage) {

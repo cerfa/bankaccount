@@ -4,6 +4,7 @@ public class UserAccTransactionDetailsResponse {
  private AccountDeepInfo userAccountDetails;
 
 public UserAccTransactionDetailsResponse() {
+	//Just for the sake of making sonar happy.
 }
 
 public UserAccTransactionDetailsResponse(AccountDeepInfo userAccountDetails) {

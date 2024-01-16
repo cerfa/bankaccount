@@ -1,19 +1,5 @@
 package fenn.bank.account.entities.repository.services;
 
-import java.math.BigDecimal;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import fenn.bank.account.dto.AccountCreationResponse;
 import fenn.bank.account.dto.AccountDeepInfo;
 import fenn.bank.account.dto.Transaction;
@@ -24,6 +10,17 @@ import fenn.bank.account.entities.Customer;
 import fenn.bank.account.entities.repository.CustomerRepository;
 import fenn.bank.account.exceptions.AccountException;
 import fenn.bank.account.external.services.TransactionConnector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerService {
@@ -49,33 +46,38 @@ public class CustomerService {
     // Get all Customer from the h2 database.
     public List<Customer> getAll() {
         final List<Customer> customerCollection = new ArrayList<>();
-        customerRepository.findAll().forEach(customer -> customerCollection.add(customer));
+        customerRepository.findAll().forEach(customerCollection::add);
         return customerCollection;
     }
     
     public AccountCreationResponse retrieveCreateCustomer(final UserData userData) throws AccountException{
     	AccountCreationResponse accountCreationResponse = new AccountCreationResponse();
-    	Optional<Customer> customer = customerRepository.findByNameAndSurname(userData.getName(),userData.getSurname());
-    	if(customer.isPresent()) {
-    		LOG.info("****** create customer out ******");
-    		accountCreationResponse.setResponseMessage("Accounting already existing");
-    		return accountCreationResponse;
-    	}
-    	else {
-    		 Customer customerAccount = new Customer(generateAccountId(),
-    				  userData.getName(),
-    				  userData.getSurname());
-    		  save(customerAccount);
-    		  LOG.info("****** create customer out ******");
-    		  accountCreationResponse.setResponseMessage("You account  ID ::  ".concat(customerAccount.getCustomerId()));
-    		return accountCreationResponse;
-    	}
+		try {
+			Optional<Customer> customer = customerRepository.findByNameAndSurname(userData.getName(), userData.getSurname());
+			if (customer.isPresent()) {
+				LOG.info("****** customer existing ******");
+				accountCreationResponse.setResponseMessage("Accounting already existing");
+				return accountCreationResponse;
+			} else {
+				Customer customerAccount = new Customer(CommonInfo.generateAccountId(),
+						userData.getName(),
+						userData.getSurname());
+				save(customerAccount);
+				LOG.info("****** create customer out ******");
+				accountCreationResponse.setResponseMessage("You account  ID ::  ".concat(customerAccount.getCustomerId()));
+				return accountCreationResponse;
+			}
+		}catch (Exception exception) {
+			throw new AccountException(exception.getMessage());
+		}
+
     }
     
-    public UserAccTransactionDetailsResponse  retrieveUserAccountDetails(String userId) throws URISyntaxException{
-		UserAccTransactionDetailsResponse accDetailsResponde= new UserAccTransactionDetailsResponse();
-		Optional<Customer> customerAccount = customerRepository.findById(userId);
-		if(customerAccount.isPresent()) {
+    public UserAccTransactionDetailsResponse  retrieveUserAccountDetails(String userId) throws AccountException {
+		UserAccTransactionDetailsResponse accDetailsResponse= new UserAccTransactionDetailsResponse();
+		try {
+		    Optional<Customer> customerAccount = customerRepository.findByCustomerId(userId);
+		    if(customerAccount.isPresent()) {
 			AccountDeepInfo userAccountDetails = new  AccountDeepInfo();
 			userAccountDetails.setName(customerAccount.get().getName());
 			userAccountDetails.setSurname(customerAccount.get().getSurname());
@@ -95,20 +97,24 @@ public class CustomerService {
 					userAccountDetails.getTransactionCollection().add(accTransaction);
 				} 
 			}
-			Account account= accountService.retrieveAccount(userId);
-			userAccountDetails.setBalance(account.getCredit().subtract(balance));
-			accDetailsResponde.setUserAccountDetails(userAccountDetails);
-		}   	  
-		return accDetailsResponde;
+			List<Account> accounts = accountService.retrieveAccounts(userId);
+
+			if(!CollectionUtils.isEmpty(accounts)) {
+				userAccountDetails.setAccountCollection(accounts);
+			 }
+
+			accDetailsResponse.setUserAccountDetails(userAccountDetails);
+		   }
+
+		}catch (Exception exception) {
+			throw new AccountException(exception.getMessage());
+		}
+
+		return accDetailsResponse;
 	}
-    public String checkCustomerExistency(String customerId) throws AccountException{
+    public String checkCustomerExistence(String customerId) {
     	Optional<Customer> customerAccount = customerRepository.findById(customerId);
     	return customerAccount.isPresent()? "OK":"KO";
-    }
-    private String generateAccountId() {
-        UUID uuid = UUID.randomUUID();
-        String uuidAsString = uuid.toString().replace("-", "");
-     return  "ACC".concat(uuidAsString);
     }
     
 }

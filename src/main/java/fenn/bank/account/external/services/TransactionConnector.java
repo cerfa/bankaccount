@@ -25,6 +25,10 @@ public class TransactionConnector {
 		String trxUrl= transactionsUrl.concat(userId);
 		URI uri = new URI(trxUrl);
 		ResponseEntity<TransactionsHistoryResponse> result = restServiceCaller.getForEntity(uri, TransactionsHistoryResponse.class);
-		return result.getBody() != null ? result.getBody().getTransactionList():new ArrayList<>();	
+		TransactionsHistoryResponse responseBody = result.getBody();
+		if(null != responseBody  && null != responseBody.getTransactionList()) {
+			return responseBody.getTransactionList();
+		}
+		return  new ArrayList<>();
 	}
 }
